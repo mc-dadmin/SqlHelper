@@ -20,7 +20,7 @@ public class SqlHelper
         /* *
         * Instantiate an empty SqlHelper object
         */
-
+            
         Trusted_Connection = false;
     }
 
@@ -43,7 +43,7 @@ public class SqlHelper
         Trusted_Connection = false;
         ConnectionString = connectionString;
     }
-
+        
     public SqlHelper(string server, string db)
     {
         /* *
@@ -54,7 +54,7 @@ public class SqlHelper
         Database = db;
         Trusted_Connection = true;
     }
-
+        
     public SqlHelper(string server, string db, string user, string pass)
     {
         /* *
