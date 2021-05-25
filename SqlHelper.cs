@@ -13,6 +13,7 @@ public class SqlHelper
     private bool Trusted_Connection;
     private string ConnectionString = "";
     private string Error = "";
+    private Exception Exception;
     private SqlConnection sqlConn;
 
     public SqlHelper()
@@ -80,6 +81,9 @@ public class SqlHelper
     public string GetError()
     { return Error; }
 
+    public Exception GetException()
+    { return Exception; }
+
     public void SetServer(string ServerName)
     { Server = ServerName; }
 
@@ -123,7 +127,7 @@ public class SqlHelper
     /// <summary>
     /// Read-only query against sql database. Pass user inputs as sqlparamters using the inputs objects for sanitization.
     /// </summary>
-    /// <returns>Returns a SqlDataReader object with the results</returns>
+    /// <returns>Returns a SqlDataReader object with the results. Exceptions can be retreived using GetException()</returns>
     /// <param name="cmd">string representing the sql query to be passed. parameter variables should be listed as @varName </param>
     /// <param name="inputs">An object[x,3] containing the sql parameters to pass. [x][0] is the (string)name of the sql paramter. [x][1] is the sqltype of paramter [optional]. [x][2] is the value of the sqlparamter.</param>
     /// <example>
@@ -138,17 +142,25 @@ public class SqlHelper
     public SqlDataReader Read(string cmd, object[,] inputs)
     {
         SqlCommand command = new SqlCommand(cmd, sqlConn);
+        SqlDataReader reader = null;
         for (int i = 0; i < inputs.GetLength(0); i++)
         {
             command.Parameters.AddWithValue((string)inputs[i, 0], inputs[i, 2]);
         }
-        return command.ExecuteReader();
+        try
+        {
+            reader = command.ExecuteReader();
+        } catch (Exception ex)
+        {
+            Exception = ex;
+        }
+        return reader;
     }
 
     /// <summary>
     /// Read-only query against sql database. Pass user inputs as sqlparamters using the inputs objects for sanitization.
     /// </summary>
-    /// <returns>Returns results as a List of Lists of strings.</returns>
+    /// <returns>Returns results as a List of Lists of strings. Exceptions can be retreived using GetException()</returns>
     /// <param name="cmd">string representing the sql query to be passed. parameter variables should be listed as @varName </param>
     /// <param name="inputs">An object[x,3] containing the sql parameters to pass. [x][0] is the (string)name of the sql paramter. [x][1] is the sqltype of paramter [optional]. [x][2] is the value of the sqlparamter.</param>
     /// <param name="includeHeader">Boolean. True if you want to include column names as the first row. False if you only want data without column names.</param>
