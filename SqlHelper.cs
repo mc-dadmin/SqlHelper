@@ -95,6 +95,10 @@ public class SqlHelper
     public void SetCMD(string cmd)
     { Command = cmd; }
 
+    /// <summary>
+    /// Open the sql connection.
+    /// </summary>
+    /// <returns>Returns True if successful. False if there was an error. Error text can be retrieved using GetError().</returns>
     public bool Connect()
     {
         if (Trusted_Connection)
@@ -117,8 +121,20 @@ public class SqlHelper
     }
 
     /// <summary>
-    /// object[,] inputs - first column is the sql variable name, second column is the variable type, third column is the value
+    /// Read-only query against sql database. Pass user inputs as sqlparamters using the inputs objects for sanitization.
     /// </summary>
+    /// <returns>Returns a SqlDataReader object with the results</returns>
+    /// <param name="cmd">string representing the sql query to be passed. parameter variables should be listed as @varName </param>
+    /// <param name="inputs">An object[x,3] containing the sql parameters to pass. [x][0] is the (string)name of the sql paramter. [x][1] is the sqltype of paramter [optional]. [x][2] is the value of the sqlparamter.</param>
+    /// <example>
+    /// <code>
+    /// string query = "select name from employees where id = @id"
+    /// object [,] inputs = new object[0,3]
+    /// inputs[0][0] = "id"
+    /// inputs[0][2] = 3
+    /// SqlDataReader results = sqlconn.Read(query,inputs)
+    /// </code>
+    /// </example>
     public SqlDataReader Read(string cmd, object[,] inputs)
     {
         SqlCommand command = new SqlCommand(cmd, sqlConn);
@@ -130,8 +146,21 @@ public class SqlHelper
     }
 
     /// <summary>
-    /// object[,] inputs - first column is the sql variable name, second column is the variable type, third column is the value
+    /// Read-only query against sql database. Pass user inputs as sqlparamters using the inputs objects for sanitization.
     /// </summary>
+    /// <returns>Returns results as a List of Lists of strings.</returns>
+    /// <param name="cmd">string representing the sql query to be passed. parameter variables should be listed as @varName </param>
+    /// <param name="inputs">An object[x,3] containing the sql parameters to pass. [x][0] is the (string)name of the sql paramter. [x][1] is the sqltype of paramter [optional]. [x][2] is the value of the sqlparamter.</param>
+    /// <param name="includeHeader">Boolean. True if you want to include column names as the first row. False if you only want data without column names.</param>
+    /// <example>
+    /// <code>
+    /// string query = "select name from employees where id = @id"
+    /// object [,] inputs = new object[0,3]
+    /// inputs[0][0] = "id"
+    /// inputs[0][2] = 3
+    /// List&#60;List&#60;string&#62;&#62; results = sqlconn.ReadToList(query,inputs)
+    /// </code>
+    /// </example>
     public List<List<string>> ReadToList(string cmd, object[,] inputs, bool includeHeader)
     {
         List<List<string>> resultList = new List<List<string>>();
