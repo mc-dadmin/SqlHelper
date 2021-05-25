@@ -116,9 +116,9 @@ public class SqlHelper
         }
     }
 
-    /* 
-    * object[,] inputs - first column is the variable placeholder name, second column is the variable type, third column is the value
-    */
+    /// <summary>
+    /// object[,] inputs - first column is the sql variable name, second column is the variable type, third column is the value
+    /// </summary>
     public SqlDataReader Read(string cmd, object[,] inputs)
     {
         SqlCommand command = new SqlCommand(cmd, sqlConn);
@@ -129,6 +129,9 @@ public class SqlHelper
         return command.ExecuteReader();
     }
 
+    /// <summary>
+    /// object[,] inputs - first column is the sql variable name, second column is the variable type, third column is the value
+    /// </summary>
     public List<List<string>> ReadToList(string cmd, object[,] inputs, bool includeHeader)
     {
         List<List<string>> resultList = new List<List<string>>();
@@ -162,6 +165,9 @@ public class SqlHelper
         return resultList;
     }
 
+    /// <summary>
+    /// object[,] inputs - first column is the sql variable name, second column is the variable type, third column is the value
+    /// </summary>
     public int Write(string cmd, object[,] inputs)
     {
         SqlCommand CMD = new SqlCommand(cmd, sqlConn);
