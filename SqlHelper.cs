@@ -214,24 +214,24 @@ public class SqlHelper
     /// <summary>
     /// Read-only query against sql database. Pass user inputs as sqlparamters using the 'inputs' object for sanitization.
     /// </summary>
-    /// <returns>Returns results as an ArrayList of Hashtables. Column names are the hash key and column values are the hash value. Exceptions can be retreived using GetException()</returns>
+    /// <returns>Returns results as a List of Hashtables. Column names are the hash key and column values are the hash value. Exceptions can be retreived using GetException()</returns>
     /// <param name="cmd">string representing the sql query to be passed. parameter variables should be listed as @varName </param>
     /// <param name="inputs">An object[x,3] containing the sql parameters to pass. [x][0] is the (string)name of the sql paramter. [x][1] is the sqltype of paramter [optional]. [x][2] is the value of the sqlparamter.</param>
     /// <example>
     /// <code>
     /// string query = "select name from employees where id = @id"
-    /// object [,] inputs = new object[0,3]
+    /// object [,] inputs = new object[1,3]
     /// inputs[0][0] = "id"
     /// inputs[0][2] = 3
-    /// ArrayList results = sqlconn.ReadToHash(query,inputs);
+    /// List&#60;Hashtable&#62; results = sqlconn.ReadToHash(query,inputs);
     /// int rowNum;
     /// results[rowNum]["colName"]
     /// </code>
     /// </example>
-    public ArrayList ReadToHash(string cmd, object[,] inputs)
+    public List<Hashtable> ReadToHash(string cmd, object[,] inputs)
     {
-        ArrayList arrayList = new ArrayList(); //declare arrayList to be returned
-        Hashtable hashtable = new Hashtable(); //declare hashtable that will be used to populate arrayList
+        List<Hashtable> resultList = new List<Hashtable>(); //declare resultList to be returned
+        Hashtable hashtable = new Hashtable(); //declare hashtable that will be used to populate resultList
 
         SqlDataReader reader = Read(cmd, inputs); //execute query
 
@@ -244,11 +244,11 @@ public class SqlHelper
                 {
                     hashtable.Add(reader.GetName(i), reader.GetValue(i));
                 }
-                arrayList.Add(hashtable);
+                resultList.Add(hashtable);
             }
         }
         reader.Close();
-        return arrayList;
+        return resultList;
     }
 
     /// <summary>
